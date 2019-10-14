@@ -39,7 +39,7 @@ def output_result(message):
 
 @bot.message_handler(content_types=['text'])
 def repeat_all_msg(message):
-    markup=types.ReplyKeyboardMarkup()
+    markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
     select_id=types.KeyboardButton('Поиск по id')
     markup.add(select_id)
     bot.send_message(message.chat.id, "hjkl", reply_markup=markup)
