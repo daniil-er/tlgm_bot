@@ -22,6 +22,7 @@ def send_proxy_info(message):
 	proxy_info=proxy_changer.get_proxy_info()
 	bot.send_message(message.chat.id, 'Работаю на айпи: {}, город: {}, страна: {}'.format(proxy_info['ip'], proxy_info['city'], proxy_info['country']))
 
+
 @bot.message_handler(func=lambda message: message.text=='Поиск по id')
 def search_id(message):
     id_enzymes = bot.send_message(message.chat.id, "по какому id искать")
@@ -42,7 +43,7 @@ def repeat_all_msg(message):
     markup=types.ReplyKeyboardMarkup(resize_keyboard=True)
     select_id=types.KeyboardButton('Поиск по id')
     markup.add(select_id)
-    bot.send_message(message.chat.id, "hjkl", reply_markup=markup)
+    bot.send_message(message.chat.id, "Пока что я могу только искать реактивы по айди", reply_markup=markup)
 
 
 try:
