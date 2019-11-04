@@ -14,7 +14,6 @@ bot = tb.TeleBot('725057513:AAGfO-UaRC6Us_ooF-TxqkP2RlevG-jaRfM')
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     bot.send_message(message.chat.id, 'Привет')
-    print(message.chat.id)
 
 
 @bot.message_handler(commands=['proxy'])
@@ -34,7 +33,10 @@ def output_result(message):
 	if not output:
 		bot.send_message(message.chat.id, "я не нашел")
 	else:
-		bot.send_message(message.chat.id, f'id: {output[0][0]}, name: {output[0][1]}, count: {output[0][2]}')
+		markup=types.InlineKeyboardMarkup()
+		edit_button=types.InlineKeyboardButton('Редактировать', callback_data='edit')
+		markup.add(edit_button)
+		bot.send_message(message.chat.id, f'id: {output[0][0]}, name: {output[0][1]}, count: {output[0][2]}', reply_markup=markup)
 
 
 @bot.message_handler(content_types=['text'])
@@ -44,6 +46,13 @@ def repeat_all_msg(message):
     markup.add(select_id)
     bot.send_message(message.chat.id, "hjkl", reply_markup=markup)
 
+
+@bot.callback_query_handler(lambda query: True)
+def press_button(query):
+	if query.data == 'edit':
+		bot.send_message(query.message.chat.id, "сколько реактивов осталось?")
+	else:
+		pass
 
 try:
     bot.polling(none_stop=True)
