@@ -16,14 +16,14 @@ def get_proxy():
 
 
 def write_proxy(proxy):
-    connection, cursor = db.connect_to('friday.db')
+    connection, cursor = db.connect_to('enzymes.db')
     update_proxy = "UPDATE proxy SET ip=?, port=? WHERE id=0;"
     cursor.execute(update_proxy, (proxy['ip'], proxy['port']))
     connection.commit()
 
 
 def read_proxy():
-    connection, cursor = db.connect_to('friday.db')
+    connection, cursor = db.connect_to('enzymes.db')
     select_proxy = 'SELECT ip, port FROM proxy'
     cursor.execute(select_proxy)
 
