@@ -2,6 +2,7 @@ import telebot as tb
 import proxy_changer
 from telebot import types
 import db
+import enzymes 
 
 
 
@@ -28,16 +29,14 @@ def select_id(message):
     bot.register_next_step_handler(id_enzymes, output_result)
 
 def output_result(message):
-	connection, cursor = db.connect_to('enzymes.db')
-	cursor.execute("SELECT * FROM enzymes WHERE id=?", (message.text, ))
-	data_enzymes = cursor.fetchall()
-	if not data_enzymes:
+	search_result = enzymes.Enzymes_List(message.text)
+	if not search_result.is_search:
 		bot.send_message(message.chat.id, "Не нашел реактив с таким айди")
 	else:
-		markup=types.InlineKeyboardMarkup()
+		keyboard_edit=types.InlineKeyboardMarkup()
 		edit_button=types.InlineKeyboardButton('Редактировать', callback_data='edit')
-		markup.add(edit_button)
-		bot.send_message(message.chat.id, f'id: {data_enzymes[0][0]}, name: {data_enzymes[0][1]}, count: {data_enzymes[0][2]}')
+		keyboard_edit.add(edit_button)
+		bot.send_message(message.chat.id, f'{search_result.get_list_enzymes()}', reply_markup = keyboard_edit)
 
 
 @bot.message_handler(content_types=['text'])
