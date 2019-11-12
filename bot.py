@@ -2,6 +2,7 @@ import telebot as tb
 import proxy_changer
 from telebot import types
 import db
+import enzymes
 
 
 
@@ -28,13 +29,18 @@ def select_id(message):
     bot.register_next_step_handler(id_enzymes, output_result)
 
 def output_result(message):
-	connection, cursor = db.connect_to('enzymes.db')
-	cursor.execute("SELECT * FROM enzymes WHERE id=?", (message.text, ))
-	data_enzymes = cursor.fetchall()
-	if not data_enzymes:
-		bot.send_message(message.chat.id, "Не нашел реактив с таким айди")
-	else:
-		bot.send_message(message.chat.id, f'id: {data_enzymes[0][0]}, name: {data_enzymes[0][1]}, count: {data_enzymes[0][2]}')
+    searched_enzymes = enzymes.Enzymes_List(message.text)
+
+    if not searched_enzymes.is_search:
+        bot.send_message(message.chat.id, "Не нашел реактив с таким айди")
+    else:
+        message_list = searched_enzymes.prepare_to_send()
+        for count, msg in enumerate(message_list):
+            print(count)
+            inline_keyboard = types.InlineKeyboardMarkup()
+            edit_button = types.InlineKeyboardButton('Редактировать', callback_data=f'art{count}')
+            inline_keyboard.add(edit_button)
+            bot.send_message(message.chat.id, msg, reply_markup=inline_keyboard)
 
 
 @bot.message_handler(content_types=['text'])
@@ -43,6 +49,11 @@ def repeat_all_msg(message):
     select_id=types.KeyboardButton('Поиск по ID')
     markup.add(select_id)
     bot.send_message(message.chat.id, "Пока что я могу только искать реактивы по айди", reply_markup=markup)
+
+
+@bot.callback_query_handler(lambda query: query.data[:3] == 'art')
+def edit_enzyme(query):
+    print(query)
 
 
 try:
