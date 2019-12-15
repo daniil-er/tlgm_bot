@@ -2,9 +2,9 @@ import db
 
 
 class Enzymes_List():
-    def __init__(self, id):
+    def __init__(self, name):
         connection, cursor = db.connect_to("enzymes.db")
-        response = cursor.execute("SELECT * FROM enzymes WHERE id=?", (id, ))
+        response = cursor.execute("SELECT * FROM enzymes WHERE LOWER(name)=?", (name.lower(), ))
         data_response = response.fetchall()
         if not data_response:
             self.is_search = False
@@ -21,16 +21,9 @@ class Enzymes_List():
         return '\n'.join(list_for_join)
 
 
-
-
-
 class Enzymes():
     def __init__(self, id, name, amount, volume):
         self.id = id
-        self.name = name         
+        self.name = name 
         self.amount = amount
         self.volume = volume
-
-
-search_enzymes = Enzymes_List('R005')
-search_enzymes.get_list_enzymes()

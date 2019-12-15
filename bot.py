@@ -2,7 +2,7 @@ import telebot as tb
 import proxy_changer
 from telebot import types
 import db
-import enzymes 
+import enzymes
 
 
 
@@ -50,9 +50,16 @@ def repeat_all_msg(message):
 @bot.callback_query_handler(lambda query: True)
 def press_button(query):
 	if query.data == 'edit':
-		bot.send_message(query.message.chat.id, "сколько реактивов осталось?")
+		data_enz = bot.send_message(query.message.chat.id, "Сколько взяли?")
+		bot.register_next_step_handler(data_enz, enzymes_edit)
 	else:
 		pass
+
+
+def enzymes_edit(message):
+	src = message.text.split('-')
+	enzymes_data = {src[0]: src[1]}
+	print(enzymes_data)
 
 try:
     bot.polling(none_stop=True)
