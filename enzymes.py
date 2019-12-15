@@ -24,6 +24,6 @@ class Enzymes_List():
 class Enzymes():
     def __init__(self, id, name, amount, volume):
         self.id = id
-        self.name = name         
+        self.name = name 
         self.amount = amount
         self.volume = volume
